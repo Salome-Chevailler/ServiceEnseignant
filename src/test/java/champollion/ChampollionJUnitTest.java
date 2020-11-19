@@ -65,4 +65,16 @@ public class ChampollionJUnitTest {
             untel.ajouteIntervention(interv4);
             assertEquals(40, untel.heuresPlanifiees());
         }
+        
+        @Test
+        public void testEnService(){
+            untel.ajouteEnseignement(uml, 0, 10, 0);
+            assertEquals(true, untel.enSousService());
+            Salle salle = new Salle("Salle", 30);
+            Date date = new Date("19/11/2020");
+            Intervention interv = new Intervention(date, 20, TypeIntervention.TD, salle);
+            untel.ajouteIntervention(interv);
+            assertEquals(false, untel.enSousService());
+        }
+       
 }
