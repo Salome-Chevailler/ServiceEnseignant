@@ -1,8 +1,12 @@
 package champollion;
 
+import static java.lang.Math.round;
+import java.util.HashSet;
+
 public class Enseignant extends Personne {
 
-    // TODO : rajouter les autres méthodes présentes dans le diagramme UML
+    private HashSet<ServicePrevu> lesEnseignements = new HashSet<>();
+    private HashSet<Intervention> lesInterventions = new HashSet<>();
 
     public Enseignant(String nom, String email) {
         super(nom, email);
@@ -17,8 +21,11 @@ public class Enseignant extends Personne {
      *
      */
     public int heuresPrevues() {
-        // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        float compteur = 0;
+        for (ServicePrevu sp : lesEnseignements){
+            compteur += (sp.getVolumeCM()*1.5 + sp.getVolumeTD() + sp.getVolumeTP()*0.75);
+        }
+        return round(compteur);
     }
 
     /**
@@ -31,8 +38,13 @@ public class Enseignant extends Personne {
      *
      */
     public int heuresPrevuesPourUE(UE ue) {
-        // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        float compteur = 0;
+        for (ServicePrevu sp : lesEnseignements){
+            if (sp.getUe() == ue){
+                compteur += (sp.getVolumeCM()*1.5 + sp.getVolumeTD() + sp.getVolumeTP()*0.75);
+            }
+        }
+        return round(compteur);
     }
 
     /**
@@ -44,8 +56,39 @@ public class Enseignant extends Personne {
      * @param volumeTP le volume d'heures de TP
      */
     public void ajouteEnseignement(UE ue, int volumeCM, int volumeTD, int volumeTP) {
-        // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        lesEnseignements.add(new ServicePrevu(ue, volumeCM, volumeTD, volumeTP));
+    }
+    
+    /**
+     * Ajoute une intervention planifiée pour cet enseignant
+     * @param interv l'intervention concernée
+     * 
+    */
+    public void ajouteIntervention(Intervention interv){
+        lesInterventions.add(interv);
+    }
+    
+    public int heuresPlanifiees(){
+        float compteur = 0;
+        for (Intervention interv : lesInterventions){
+            if (interv.getTypeIntervention() == null){
+                compteur += interv.getDuree();
+            } else switch (interv.getTypeIntervention()){
+                case CM:
+                    compteur += (interv.getDuree() * 1.5);
+                    break;
+                case TP:
+                    compteur += (interv.getDuree() * 0.75);
+                    break;
+                default:
+                    compteur += interv.getDuree();
+                    break;
+            }
+        }
+        return round(compteur);
     }
 
+    public boolean enSousService(){
+        return this.heuresPlanifiees() < this.heuresPrevues();
+    }
 }
