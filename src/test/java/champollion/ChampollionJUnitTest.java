@@ -37,4 +37,13 @@ public class ChampollionJUnitTest {
 		
 	}
 	
+        @Test
+        public void testHeuresPrevues(){
+            untel.ajouteEnseignement(uml, 0, 10, 0);
+            assertEquals(10, untel.heuresPrevues());
+            untel.ajouteEnseignement(uml, 10, 0, 0);
+            assertEquals(10 + 15, untel.heuresPrevues());
+            untel.ajouteEnseignement(uml, 0, 0, 20);
+            assertEquals(10 + 15 + 15, untel.heuresPrevues());
+        }
 }
